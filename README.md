@@ -1,6 +1,6 @@
 # unicompat
 
-This repo contains the source code for https://unicompat.org.
+This repo contains the source code for https://unicompat.com.
 
 * Backend: Django + Django REST Framework + Postgres
 * Frontend: React + Typescript
