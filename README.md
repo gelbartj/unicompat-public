@@ -2,7 +2,7 @@
 
 This repo contains the source code for https://unicompat.com.
 
-* Backend: Django + Django REST Framework + Postgres
+* Backend: Django REST Framework + Postgres
 * Frontend: React + Typescript
 
 The `database-builder` folder contains the Python scripts that were used to scrape the Unicode consortium's data files located [here](https://www.unicode.org/Public/UCD/latest/ucdxml/) and [here](https://unicode.org/Public/emoji/13.0/), generate PNG files for roughly 40,000 glyphs, and import the relevant font and OS data into the database.
