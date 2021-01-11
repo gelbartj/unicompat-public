@@ -139,7 +139,7 @@ if USE_S3:
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
     AWS_DEFAULT_ACL = None
-    AWS_S3_CUSTOM_DOMAIN = 'd1iu3fqjg53env.cloudfront.net'
+    AWS_S3_CUSTOM_DOMAIN = 'YOUR_CLOUDFRONT_ADDRESS.cloudfront.net'
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
     # s3 static settings
     STATIC_LOCATION = 'django-static'
@@ -151,9 +151,9 @@ if USE_S3:
     DEFAULT_FILE_STORAGE = 'django-postgres-backend.storage_backends.PublicMediaStorage'
 else:
     STATIC_URL = '/static/'
-    STATIC_ROOT = '/Users/jonathan/Documents/repos/unicodeProject/static/'
+    STATIC_ROOT = '/home/unicompat/static/'
     MEDIA_URL = '/media/'
-    MEDIA_ROOT = '/Users/jonathan/Documents/repos/unicodeProject/media/'
+    MEDIA_ROOT = '/home/unicompat/media/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),) # can be different from above to add add'l dirs
 
