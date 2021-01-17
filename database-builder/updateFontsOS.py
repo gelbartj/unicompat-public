@@ -94,7 +94,7 @@ def assignAppleiFonts(fonts):
         fontStyle = " ".join(splitFont[1:]) if len(splitFont) > 1 else ""
         fileName = fontName.replace(" ","") + "-" + fontStyle.replace(" ", "")
         fontObjs = Font.objects.filter(name=fontName, style=fontStyle)
-        if fontObjs.count() == 0:
+        if not fontObjs.exists():
             print(fontName, " not found")
             try:
                 print("CHECKING FOR 'REGULAR' FONT: ", fontName)
@@ -102,7 +102,7 @@ def assignAppleiFonts(fonts):
                 fontObjs = [Font.objects.get(name=fontName, style=newStyle)]
             except Font.DoesNotExist:
                 fontObjs = Font.objects.filter(fileName=fileName)
-                if fontObjs.count() == 0:
+                if not fontObjs.exists():
                     missingList += [font]
                     print("Could not find ", font)
                     continue

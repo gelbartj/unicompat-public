@@ -1,5 +1,11 @@
 import re
 import django
+
+"""
+Fix font names and styles (e.g. some Noto fonts) that have no spaces between words,
+e.g. NotoAdlamRegular, and add spaces where appropriate.
+"""
+
 for font in Font.objects.filter(name__contains="Noto"):
     splitFileName = font.fileName.split("-")
     newName = re.sub(r"([a-z])([A-Z])", r"\1 \2", splitFileName[0])

@@ -1,154 +1,160 @@
 .btn.btn-light {
-    background-color: #eee;
-    box-shadow: 0 2px lightgrey;
+  background-color: #eee;
+  box-shadow: 0 2px lightgrey;
+  cursor: pointer;
 }
 
-
 .masthead {
-    text-align: left;
-    letter-spacing:1px;
-    padding:10px 20px;
-    color:white;
-    background-color:rgb(18, 79, 128);
-    font-weight:500;
-    font-size:1.5em;
-    box-shadow:0px 0px 3px black;
-    width:100%;
+  text-align: left;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  color: white;
+  background-color: rgb(18, 79, 128);
+  font-weight: 500;
+  font-size: 1.5em;
+  box-shadow: 0px 0px 3px black;
+  width: 100%;
 }
 
 .masthead .logo {
-    margin: 0 20 0px 0px;
-    padding:0;
-    float:left;
+  margin: 0 20 0px 0px;
+  padding: 0;
+  float: left;
 }
 
 .logo {
-    font-family: "Lato", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-display: swap;
+  font-family: "Lato", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-display: swap;
 }
 
 .beta {
-    font-variant: small-caps;
-    font-size: 0.7em;
-    color:#ccc;
+  font-variant: small-caps;
+  font-size: 0.7em;
+  color: #ccc;
 }
 
 .searchBlockWrap {
-    text-align:right;
+  text-align: right;
 }
 
 .masthead .random {
-    display: inline-block;
-    margin-right:10px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
+  display: inline-block;
+  margin-right: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 .masthead .random:hover {
-    background:rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 @media only screen and (max-width: 675px) {
-    .masthead .random {
-        display: none;
-    }
+  .masthead .random {
+    display: none;
+  }
 }
 
 .searchBlock {
-    margin: auto;
-    display: inline-block;
+  margin: auto;
+  display: inline-block;
 }
 
 .searchBox {
-    margin-right: 5px;
-    padding-right: 5px;
-    font-size: 1rem;
-    width: 200px;
+  margin-right: 5px;
+  padding-right: 5px;
+  font-size: 1rem;
+  width: 200px;
 }
 
-@media only screen and (max-width:580px) {
-    .searchBlock {
-        display:block;
-        clear:both;
-        text-align: center;
-    }
+@media only screen and (max-width: 580px) {
+  .searchBlock {
+    display: block;
+    clear: both;
+    text-align: center;
+  }
 
-    .searchBox {
-        width: 150px;
-    }
+  .searchBox {
+    width: 150px;
+  }
 
-    .masthead .logo {
-        text-align: center;
-        float: none;
-    }
+  .masthead .logo {
+    text-align: center;
+    float: none;
+  }
 }
 
 .title {
-   text-align: center;
-   margin-bottom:15px;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .example {
-    padding:2px;
-    margin:2px;
-    background-color: #efefef;
+  padding: 3px;
+  margin: 2px;
+  background-color: #efefef;
+  font-size: 1.1em;
+}
+
+.example:hover {
+    text-decoration: none;
+    background-color: #eaeaea;
 }
 
 .featuredOSwrap {
-    margin:10px auto;
-    text-align: center;
-    transition: opacity 0.25s ease-in-out; 
-    width:70%;
-    overflow:hidden;
-    box-sizing: border-box;
+  margin: 10px auto;
+  text-align: center;
+  transition: opacity 0.25s ease-in-out;
+  width: 70%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .featuredOSwrap.active {
-    max-height:5000px;
-    height: auto;
+  max-height: 5000px;
+  height: auto;
 }
 
 .featuredOSwrap.hidden {
-    max-height: 0px;
-    height: 0px;
+  max-height: 0px;
+  height: 0px;
 }
 
 .featuredOS {
-    margin:auto;
-    text-align:center;
-    padding:10px 15px;
-    background-color:#f6f6f6;
-    border: 1px solid darkgreen;
+  margin: auto;
+  text-align: center;
+  padding: 10px 15px;
+  background-color: #f6f6f6;
+  border: 1px solid darkgreen;
 }
 
 .featuredOSfontsWrap {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 .fontList {
-    min-height: 7em;
+  min-height: 7em;
 }
 
 @media only screen and (max-width: 800px) {
-    .featuredOSwrap {
-        width: 100%;
-    }
+  .featuredOSwrap {
+    width: 100%;
+  }
 }
 
 .featuredOSname {
-    margin-bottom:0;
-    color: white;
-    font-weight: bold;
-    font-size: 1.4em;
-    background-color: darkgreen;
-    padding: 3px;
-    margin: -11px -16px 10px -16px;
+  margin-bottom: 0;
+  color: white;
+  font-weight: bold;
+  font-size: 1.4em;
+  background-color: darkgreen;
+  padding: 3px;
+  margin: -11px -16px 10px -16px;
 }
 
 .showMoreBtn {
-    background: none;
-    border: 0;
-    color: #007bff;
+  background: none;
+  border: 0;
+  color: #007bff;
 }
 
 /*
@@ -162,508 +168,728 @@
 } */
 
 .userPercentWrap {
-    text-align: center;
+  text-align: center;
 }
 
-.userPercentBlock, .unassignedExp, .privateBlock {
-    text-align:center;
-    margin:10px auto;
-    padding: 12px;
-    font-size: 1.15em;
+.userPercentBlock,
+.unassignedExp,
+.privateBlock {
+  text-align: center;
+  margin: 10px auto;
+  padding: 12px;
+  font-size: 1.15em;
 }
 
 .privateBlock {
-    padding: 20px 50px;
-    text-align: justify;
-    font-size: 1.05em;
+  padding: 20px 50px;
+  text-align: justify;
+  font-size: 1.05em;
+}
+
+.controlChar {
+  background-color: #eee;
+  font-style: italic;
+  padding: 10px;
+  display: inline-block;
+  margin: auto;
+}
+
+.controlChar.nonChar {
+  font-weight: bold;
+  width: 90%;
 }
 
 .unassignedExp {
-    border-top: 1px solid grey;
-    border-bottom: 1px solid grey;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
 }
 
 .userPercent {
-    font-size:1.3em;
-    padding:6px;
-    margin:3px auto;
-    border-radius: 5px;
-    font-weight: bold;
-    max-width: 10em;
+  font-size: 1.3em;
+  padding: 6px;
+  margin: 3px auto;
+  border-radius: 5px;
+  font-weight: bold;
+  max-width: 10em;
+  line-height: 1.3em;
 }
 
 .notoBlock {
-    padding: 10px;
-    margin:10px auto 0 auto;
-    display:inline-block;
-    border-top:1px solid lightgrey;
-    font-size: 1rem;
+  padding: 10px;
+  margin: 10px auto 0 auto;
+  display: inline-block;
+  border-top: 1px solid lightgrey;
+  font-size: 1rem;
 }
 
 :root {
-    --great: darkgreen;
-    --vgood: rgb(82, 160, 61);
-    --good: rgb(175, 238, 144);
-    --ok: yellowgreen;
-    --fair: rgb(255, 225, 0);
-    --poor: rgb(237, 152, 48);
-    --vpoor: darkred;
+  --great: darkgreen;
+  --vgood: rgb(82, 160, 61);
+  --good: rgb(175, 238, 144);
+  --ok: yellowgreen;
+  --fair: rgb(255, 225, 0);
+  --poor: rgb(237, 152, 48);
+  --vpoor: darkred;
 }
 
 .userPercent.great {
-    background-color: var(--great);
-    color:white;
+  background-color: var(--great);
+  color: white;
 }
 
 .userPercent.vgood {
-    background-color: var(--vgood);
-    color:white;
+  background-color: var(--vgood);
+  color: white;
 }
 
 .userPercent.good {
-    background-color:  var(--good);
+  background-color: var(--good);
 }
 
 .userPercent.ok {
-    background-color: var(--ok);
+  background-color: var(--ok);
 }
 
 .userPercent.fair {
-    background-color:  var(--fair);
+  background-color: var(--fair);
 }
 
 .userPercent.poor {
-    background-color:  var(--poor);
+  background-color: var(--poor);
 }
 
 .userPercent.vpoor {
-    background-color: var(--vpoor);
-    color: white;
+  background-color: var(--vpoor);
+  color: white;
+}
+
+.userPercent.none {
+  background-color: #000;
+  color: white;
 }
 
 .browserLegendBlock {
-    text-align: center;
-    padding: 10px;
-    border-bottom: 1px solid lightgrey;
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid lightgrey;
 }
 
 .browserLegend {
-width: 20px;
-display: inline-block;
-margin-left: 10px;
+  width: 20px;
+  display: inline-block;
+  margin-left: 10px;
 }
 
 .browserLegendItem {
-    margin:5px;
-    display: inline-block;
+  margin: 5px;
+  display: inline-block;
 }
 
 .browserLegend.great {
-    border: 1px solid grey;
-    background: none;
+  border: 1px solid lightgrey;
+  background: none;
 }
 
 .browserCell.great {
-    text-shadow:1px 1px 2px rgb(191, 191, 191);
+  text-shadow: 1px 1px 2px rgb(191, 191, 191);
 }
 
 .browserCell.vgood {
-    background-color:rgb(225, 238, 207);
+  background-color: rgb(225, 238, 207);
 }
 
-.browserCell.good, .browserLegend.good {
-    background-color:rgb(210, 235, 174);
+.browserCell.good,
+.browserLegend.good {
+  background-color: rgb(210, 235, 174);
 }
 
-.browserCell.ok, .browserLegend.ok {
-    background-color:rgb(234, 235, 192);
+.browserCell.ok,
+.browserLegend.ok {
+  background-color: rgb(234, 235, 192);
 }
 
-
-.browserCell.fair, .browserLegend.fair {
-    background-color:rgb(244, 221, 172);
-    opacity: 0.8;
+.browserCell.fair,
+.browserLegend.fair {
+  background-color: rgb(244, 221, 172);
+  opacity: 0.8;
 }
 
-.browserCell.poor, .browserLegend.poor {
-    background-color:rgb(250, 224, 212);
-    opacity: 0.8;
+.browserCell.poor,
+.browserLegend.poor {
+  background-color: rgb(250, 224, 212);
+  opacity: 0.8;
 }
 
-.browserCell.vpoor, .browserLegend.vpoor {
-    background-color:rgb(247, 221, 221);
-    border-bottom:1px solid darkred;
-    opacity: 0.8;
+.browserCell.vpoor,
+.browserLegend.vpoor {
+  background-color: rgb(247, 221, 221);
+  border-bottom: 1px solid darkred;
+  opacity: 0.8;
+}
+
+.browserCell.none,
+.browserLegend.none {
+  background: none;
+  border: 1px solid darkred;
+  opacity: 0.8;
+}
+
+.browserCell.none img {
+  box-shadow: 0px 0px 2px 5px #fff;
+  margin-bottom:5px;
+}
+
+.browserCell.unk,
+.browserLegend.unk {
+  background-color: none;
+  border: 2px dashed goldenrod;
+  opacity: 0.8;
+}
+
+.blockPageNum {
+  font-style: italic;
+}
+
+.largeBlockNotice {
+  text-align: center;
+  margin: 15px 0;
+  background-color: #eee;
+  padding: 5px;
 }
 
 .content {
-    margin: auto;
-    text-align: center;
+  margin: auto;
+  text-align: center;
 }
 
 .osHeader {
-    text-align: center;
-    font-weight: bold;
-    font-size:1.2em;
-    padding:5px;
-    color: #444;
-    letter-spacing: 1px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 5px;
+  color: #444;
+  letter-spacing: 1px;
 }
 
 .osSection {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: auto;
-}
-
-@media only screen and (max-width:500px) {
-    .osSection {
-        flex-direction:column;
-    }
-}
-
-.osWrapper {
-    min-width: 10em;
-    display:flex;
-    flex-direction:column;
-    margin:10px;
-}
-
-.highlightBox ,.renderedImg {
-    text-align: center;
-    padding: 10px;
-    margin:15px;
-    display: inline-block;
-    font-size: 1em;
-    border: 1px solid darkgrey;
-    min-width:50px;
-    vertical-align: middle;
-}
-
-.renderedImg {
-    border:2px solid green;
-    background-color: #fff;
-}
-
-.renderedImg img {
-    max-height: 8em;
-}
-
-.highlightBox.loaded {
-    font-size: 6em;
-}
-
-.bwEmojiWrap {
-    display:inline-block;
-    border-right: 1px solid lightgrey;
-}
-
-.colorEmojiWrap {
-    display:inline-block;
-}
-
-.twoEmojiTable {
-    border: 0;
-}
-
-.twoEmojiTable td {
-    border: 0;
-}
-
-.bwEmoji {
-    font-family: Menlo, Consolas, "Lucida Console", "Courier New", "Monaco", "Courier", monospace;
-    padding-right: 10px;
-    vertical-align: middle;   
-}
-
-.colorEmoji {
-    font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Arial;
-    padding-left: 10px;
-    vertical-align: middle;
-}
-
-.charSource {
-    font-size: 0.9rem;
-    margin-top: 10px;
-    padding-top:10px;
-    color: #555;
-    vertical-align: bottom;
-    line-height: 1em;
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-}
-
-.charSource.color {
-    font-size: 0.85rem;
-    color:#666;
-}
-
-
-code {
-    color: #d0357c;
-}
-
-.questionEquals {
-    display: inline-block;
-    font-size: 6em;
-    vertical-align: middle;
-    color: #777;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
 }
 
 @media only screen and (max-width: 500px) {
-    .questionEquals {
-        display:block;
-        margin: 0;
-        padding: 0;
-        line-height: 1em;
-    }
+  .osSection {
+    flex-direction: column;
+  }
+}
 
-    .highlightBox ,.renderedImg {
-        margin: 5px;
-    }
+.osWrapper {
+  min-width: 10em;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.highlightBox,
+.renderedImg {
+  text-align: center;
+  padding: 10px;
+  margin: 15px;
+  display: inline-block;
+  font-size: 1em;
+  border: 1px solid darkgrey;
+  min-width: 50px;
+  vertical-align: middle;
+}
+
+.renderedImg {
+  border: 2px solid green;
+  background-color: #fff;
+}
+
+.renderedImg img {
+  max-height: 8em;
+}
+
+.highlightBox.loaded {
+  font-size: 6em;
+}
+
+.bwEmojiWrap {
+  display: inline-block;
+  border-right: 1px solid lightgrey;
+}
+
+.colorEmojiWrap {
+  display: inline-block;
+}
+
+.twoEmojiTable {
+  border: 0;
+}
+
+.twoEmojiTable td {
+  border: 0;
+}
+
+.bwEmoji {
+  font-family: Menlo, Consolas, "Lucida Console", "Courier New", "Monaco",
+    "Courier", monospace;
+  padding-right: 10px;
+  vertical-align: middle;
+}
+
+.colorEmoji {
+  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Arial;
+  padding-left: 10px;
+  vertical-align: middle;
+}
+
+.charSource {
+  font-size: 0.9rem;
+  margin-top: 10px;
+  padding-top: 10px;
+  color: #555;
+  vertical-align: bottom;
+  line-height: 1em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.charSource.color {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+code {
+  color: #d0357c;
+}
+
+.questionEquals {
+  display: inline-block;
+  font-size: 6em;
+  vertical-align: middle;
+  color: #777;
+}
+
+@media only screen and (max-width: 500px) {
+  .questionEquals {
+    display: block;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+  }
+
+  .highlightBox,
+  .renderedImg {
+    margin: 5px;
+  }
 }
 
 .osVersion {
-    text-align:center;
-    margin-bottom: 3px;
-    padding:5px;
-    font-weight:800;
-    display:block;
-    border-radius:0px;
+  text-align: center;
+  margin-bottom: 3px;
+  padding: 5px;
+  font-weight: 800;
+  display: block;
+  border-radius: 0px;
+}
+
+.variantWrap {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.variantWrap h5 {
+  color: #666;
+  font-variant: small-caps;
+  margin-bottom: 0;
+}
+
+.variant {
+  display: inline-block;
+  margin: 5px;
+  font-size: 3rem;
+  padding: 5px;
+  border: 1px solid #ddd;
+  color: initial;
+}
+
+.variant:hover {
+  background: #fff;
+  text-decoration: none;
+  color: initial;
 }
 
 .wrap {
-    max-width: 80%;
-    margin: 0px auto;
-    padding: 15px 20px 50px 20px;
-    box-shadow: 0px 0px 10px grey;
-    background-color: rgba(255, 255, 255, 0.95);
-    height: 100%;
+  max-width: 80%;
+  margin: 0px auto;
+  padding: 15px 20px 50px 20px;
+  box-shadow: 0px 0px 10px grey;
+  background-color: rgba(255, 255, 255, 0.95);
+  height: 100%;
 }
 
 @media only screen and (max-width: 800px) {
-    .wrap {
-        max-width: 100%;
-        padding: 15px 20px;
-    }
+  .wrap {
+    max-width: 100%;
+    padding: 15px 20px;
+  }
 }
 
 @media only screen and (min-width: 1100px) {
-    .wrap {
-        max-width: 70%;
-    }
+  .wrap {
+    max-width: 70%;
+  }
+}
+
+.wrap.blockLink {
+  padding-bottom: 0;
 }
 
 body {
-    background: darkgrey url('https://d1iu3fqjg53env.cloudfront.net/fuji-1000.jpg') no-repeat fixed; 
-    background-size: cover; 
-    /*
+  background: darkgrey
+    url("https://static-s3.unicompat.com/fuji-1000.jpg") no-repeat fixed;
+  background-size: cover;
+  /*
     background-color: rgb(246,226,197); 
     background: linear-gradient(0deg, rgb(255, 241, 219) 0%, rgba(255,255,255,1) 80%);
     */
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 @media only screen and (min-width: 1001px) {
-    body {
-        background: darkgrey url('https://d1iu3fqjg53env.cloudfront.net/fuji-1500.jpg') no-repeat fixed; 
-        background-size: cover;
-    }
+  body {
+    background: darkgrey
+      url("https://static-s3.unicompat.com/fuji-1500.jpg") no-repeat fixed;
+    background-size: cover;
+  }
 }
 
 @media only screen and (min-width: 1501px) {
-    body {
-        background: darkgrey url('https://d1iu3fqjg53env.cloudfront.net/fuji.jpg') no-repeat fixed; 
-        background-size: cover;
-    }
+  body {
+    background: darkgrey url("https://static-s3.unicompat.com/fuji.jpg")
+      no-repeat fixed;
+    background-size: cover;
+  }
 }
 
 .webp body {
-    background: darkgrey url('https://d1iu3fqjg53env.cloudfront.net/fuji.webp') no-repeat fixed; 
-    background-size: cover;
+  background: darkgrey url("https://static-s3.unicompat.com/fuji.webp")
+    no-repeat fixed;
+  background-size: cover;
 }
 
 .whichOS {
-    text-align: center;
-    font-style: italic;
-    margin-top: 15px;
-    margin-bottom: -10px;
+  text-align: center;
+  font-style: italic;
+  margin-top: 15px;
+  margin-bottom: -10px;
 }
 
 .osVersion.supported {
-    background: rgb(130, 201, 135);
-    /* background: linear-gradient(-30deg, rgba(98,216,106,1) 0%, rgba(137,249,143,1) 100%); */
+  background: rgb(130, 201, 135);
+  /* background: linear-gradient(-30deg, rgba(98,216,106,1) 0%, rgba(137,249,143,1) 100%); */
 }
 
 .osVersion.supported:hover {
-    background-color:rgb(113, 179, 118);   
+  background-color: rgb(113, 179, 118);
 }
 
-.osVersion.supported:active, .osVersion.supported.active {
-    background-color:darkgreen;   
-    color:white;
+.osVersion.supported:active,
+.osVersion.supported.active {
+  background-color: darkgreen;
+  color: white;
 }
 
 .osVersion.unsupported {
-    background-color: rgb(244, 191, 191);
+  background-color: rgb(244, 191, 191);
 }
 
 .osVersion.unsupported.disabled {
-    opacity: 0.9; /* override bootstrap */
+  opacity: 0.9; /* override bootstrap */
 }
 
 .osVersion.unsupported:hover {
-    background-color: rgb(244, 191, 191);
+  background-color: rgb(244, 191, 191);
 }
 .osVersion.unsupported:active {
-    background-color: rgb(244, 191, 191);
+  background-color: rgb(244, 191, 191);
 }
 
 .osReleaseDate {
-    font-style: italic;
-    font-size: 0.9rem;
-    margin: 15px 0 0px 0;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin: 15px 0 0px 0;
 }
 
 .OSusedBy {
-    font-style: italic;
-    padding: 0 0 4px 0;
-    font-size:1rem;
+  font-style: italic;
+  padding: 0 0 4px 0;
+  font-size: 1rem;
 }
 
 .showCharBtn {
-    background-color: #eee;
-    margin-top:10px;
-    box-shadow: 0 2px 3px grey;
+  background-color: #eee;
+  margin-top: 10px;
+  box-shadow: 0 2px 3px grey;
 }
 
 .showCharBtn:hover {
-    background-color:#ddd;
+  background-color: #ddd;
 }
 
 .showFAQsBtn {
-    margin: auto;
-    box-Shadow:0px 2px lightgrey;
+  margin: auto;
+  box-shadow: 0px 2px lightgrey;
 }
 
 .showFAQsBtn:hover {
-    background-color: #eee;
+  background-color: #eee;
 }
 
 .detailTableWrap {
-    transition: opacity 0.25s ease-in-out;
-    overflow: hidden;
+  transition: opacity 0.25s ease-in-out;
+  overflow: hidden;
 }
 
 .detailTableWrap.active {
-    max-height: 1000px;
-    opacity: 1;
+  max-height: 1000px;
+  opacity: 1;
 }
 
 .detailTableWrap.hidden {
-    max-height: 0px;
-    opacity: 0;
+  max-height: 0px;
+  opacity: 0;
 }
 
 table td {
-    border:1px solid #ddd;
-    padding:3px;
+  border: 1px solid #ddd;
+  padding: 3px;
 }
 
 .emojiHelp {
-    margin:10px;
-    background-color: #eee;
-    padding: 5px;
-    font-size: 0.9em;
+  margin: 10px;
+  background-color: #eee;
+  padding: 5px;
+  font-size: 0.9em;
 }
 
 .bottomWrap {
-    margin:25px 0 0px;
+  margin: 25px 0 0px;
 }
 
 .sourceCitation {
-    text-align: left;
-    font-style: italic;
-    margin-top:25px;
+  text-align: left;
+  font-style: italic;
+  margin-top: 25px;
 }
 
 .faqWrap .faqBlock {
-    transition: max-height 0.5s linear;
-    box-sizing: border-box;
-    overflow: hidden;
+  transition: max-height 0.5s linear;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .faqWrap .faqBlock.active {
-    max-height:1500px;
-    height:auto;
+  max-height: 1500px;
+  height: auto;
 }
 
 .faqWrap .faqBlock.hidden {
-    max-height: 0px;
-    height:0px;
+  max-height: 0px;
+  height: 0px;
 }
 
 .outsideWrap {
-    text-align: center;
-    margin: 20px;
-    color: white;
-    text-shadow: 1px 1px 3px black;
-    font-size: 0.9em;
-    font-style: italic;
+  text-align: center;
+  margin: 20px;
+  color: white;
+  text-shadow: 1px 1px 3px black;
+  font-size: 0.9em;
+  font-style: italic;
 }
 
 .outsideWrap a {
-    color: white;
-    text-decoration: underline;
+  color: white;
+  text-decoration: underline;
 }
 
 .outsideWrap a:hover {
-    text-decoration: none;
-    color:#fafafa;
+  text-decoration: none;
+  color: #fafafa;
 }
 
 .emojiHeader {
-    letter-spacing: 25px;
-    font-size: 3em;
-    margin: 10px;
-    text-align: center;
+  letter-spacing: 25px;
+  font-size: 3em;
+  margin: 10px;
+  text-align: center;
 }
 
 .emojiHeader span {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
-.emojiHeader span:hover, .emojiHeader span:active {
-    opacity: 1.0;
+.emojiHeader span:hover,
+.emojiHeader span:active {
+  opacity: 1;
 }
 
 .emojiHeader a {
-    color: initial;
+  color: initial;
 }
 
 .emojiHeader a:hover {
-    text-decoration: none;
-    border: 0;
+  text-decoration: none;
+  border: 0;
+}
+
+.blockBrowser {
+  text-align: center;
+  font-weight: normal;
+  color: #333;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.blockBrowser.dimmed {
+  font-size: 1.2rem;
+  color: #666;
 }
 
 .browserCell {
-    font-size: 2.5em;
-    padding: 0px 8px;
-    margin: 8px;
-    display: inline-block;
-    min-width: 30px;
+  font-size: 2.5em;
+  padding: 0px 8px;
+  margin: 8px;
+  display: inline-block;
+  min-width: 30px;
 }
 
-.browserCell a, a .browserCell {
-    color: initial;
+.browserCell a,
+a .browserCell {
+  color: initial;
 }
 
 .browserCell a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .browserCell:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
+.errorMessage {
+  background-color: rgb(247, 221, 221);
+  padding: 5px;
+  margin: 5px 0;
+  text-align: center;
+  color: rgb(192, 11, 11);
+}
+
+.blockLinkFooter {
+  border-top: 1px solid goldenrod;
+  padding: 10px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.blockLinkFooter a {
+  font-weight: bold;
+}
+
+@media only screen and (max-width:800px) {
+  .blockLinkFooter {
+    margin-bottom: -20px;
+  }
+}
+
+#searchResultsWrap a {
+  color: initial;
+}
+
+#searchResultsWrap a:hover {
+  text-decoration: none;
+}
+
+.searchResult {
+  padding: 10px;
+  text-align:left;
+  vertical-align: middle;
+  border-bottom: 1px solid #ddd;
+}
+
+.searchResult:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid #ccc;
+}
+
+.searchNumber {
+  font-size: 1.2em;
+  color: #555;
+  margin-right: 10px;
+  width: 1.2em;
+}
+
+.searchResultsImg {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 3em;
+  text-align: center;
+  margin-right: 10px;
+  text-shadow: 1px 1px 2px #999;
+  min-width: 3em;
+}
+
+.searchResultsName {
+  font-size: 1.5em;
+  display: inline-block;
+  color:#007bff;
+  text-decoration:none;
+  max-width:calc(100% - 11em);
+}
+
+.searchResultsName:hover {
+  color:#0056b3;
+}
+
+.searchPageNum {
+  font-style: italic;
+  color: #666;
+}
+
+.searchPageWrap {
+  clear: both;
+  padding: 5px 0;
+  margin: 10px 0;
+}
+
+@media only screen and (max-width:800px) {
+  .searchResultsImg {
+    font-size: 2em;
+    min-width: 2em;
+  }
+  .searchResultsName {
+    font-size: 1.25em;
+    max-width: 75%;
+  }
+}
+
+.fromSearchBanner {
+  background-color: #eee;
+  padding: 5px;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.5s;
+  margin-top: -15px;
+  margin-right: -20px;
+  margin-left: -20px;
+  margin-bottom: 20px;
+}
+
+.fromSearchBanner.hidden {
+  opacity: 0;
+}

@@ -28,7 +28,8 @@ export const formatDate = (date: string) => {
     return slug;
   }
 
-  export const getUserPercentClass = (userPercent: number) => {
+  export const getUserPercentClass = (userPercent: number, isBrowser?: boolean,
+    bitmap?: string) => {
 
     if (userPercent > 95) {
       return "great";
@@ -48,5 +49,10 @@ export const formatDate = (date: string) => {
     if (userPercent > 60) {
       return "poor";
     }
+    if (userPercent === 0) {
+      if (!bitmap && isBrowser) return "vpoor";
+      return "none";
+    }
+    
     return "vpoor";
   };

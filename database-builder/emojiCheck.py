@@ -1,13 +1,20 @@
-from uharfbuzz import Face, Font as BuzzFont, Buffer, ot_font_set_funcs, shape
+from uharfbuzz import Face, Buffer, ot_font_set_funcs, shape
+from uharfbuzz import Font as UFont
 from pathlib import Path
 
 def emojiSupported(emoji: str, fontdata) -> bool:
-    # Load font:
-    
+    """
+    This function checks for support for a given emoji
+    in a font file, particularly the multi-byte ZWJ
+    sequences.
+
+    Many thanks to StackOverflow user COM8 for this code.
+    https://stackoverflow.com/a/55560968/1174966
+    """
 
     # Load font (has to be done for call):
     face = Face(fontdata)
-    font = BuzzFont(face)
+    font = UFont(face)
     upem = face.upem
     font.scale = (upem, upem)
     ot_font_set_funcs(font)
@@ -46,17 +53,18 @@ def emojiSupported(emoji: str, fontdata) -> bool:
 
 allSeq = Sequence.objects.filter(isEmoji=True)
 
-fontList = list(Path("/Users/jonathan/Documents/repos/unicodeProject/database-builder/emojiSequenceCheck/").rglob("*.ttf"))
+fontList = [Path("/path/to/font.ttf")]
 
 for fontPath in fontList:
-    fontObj = Font.objects.get(fileName=str(fontPath).split("/")[-1][:-4])
+    fontObj = Font.objects.get(fileName=fontPath.stem, version="Version 6.09") # split("/")[-1][:-4])
     print("Got fontobj: ", fontObj)
     with open(fontPath, 'rb') as fontfile:
         fontdata = fontfile.read()
         print("Opened ", fontPath)
-        for sequence in allSeq.all():
+        for sequence in allSeq:
             if emojiSupported(sequence.sequence(), fontdata):
                 print("Found support for ", sequence)
                 fontObj.sequences.add(sequence)
                 fontObj.save()
+        
 

@@ -1,13 +1,27 @@
 import xml.etree.ElementTree as ET
 from django.utils.text import slugify
 
-file = '/Users/jonathan/Downloads/ucd.all.grouped.xml'
+# from .models import UnicodeBlock, UnicodeVersion, Glyph
+
+"""
+The purpose of this file is to import all of the Unicode codepoints
+from the official Unicode file ucd.all.grouped.xml, available at
+http://unicode.org/Public/UCD/latest/ucdxml/ucd.all.grouped.zip.
+
+This script is meant to be run from the Django manage.py shell.
+"""
+
+file = '/home/Downloads/ucd.all.grouped.xml'
 tree = ET.parse(file)
 root = tree.getroot()
 
+# Set this to True when setting up the initial database. Set to False
+# if UnicodeBlocks and Glyphs have been created and just need to be
+# updated.
+CREATE_INITIAL_DB = False
+
 for mainTag in root:
-    """
-    if mainTag.tag == "blocks":
+    if CREATE_INITIAL_DB and mainTag.tag == "blocks":
         for block in mainTag:
             blockObj = UnicodeBlock(
                 name=block.get("name"),
@@ -17,7 +31,7 @@ for mainTag in root:
             )
             blockObj.save()
             print("CREATED BLOCK ", blockObj)
-    """
+
     if mainTag.tag == "repertoire":
         errorList = []
         for idx, group in enumerate(mainTag):
@@ -59,38 +73,38 @@ for mainTag in root:
                         errorList += [cp]
                         continue
 
+                    if CREATE_INITIAL_DB:
+                        block = UnicodeBlock.objects.get(start__lte=cpInt, end__gte=cpInt)
+                        uniVersion = UnicodeVersion.objects.get(number=charAge)
 
-                    #block = UnicodeBlock.objects.get(start__lte=cpInt, end__gte=cpInt)
+                        glyph = Glyph(
+                            officialName=charName, 
+                            codePoint=cpInt, 
+                            abbreviation=charAbbrev, 
+                            codePlane = cpInt // 65536, 
+                            category=category, 
+                            joiningGroup=jg,
+                            slug=cp,
+                            unicodeBlock=block,
+                            minUnicodeVersion=uniVersion,
+                            definition=definition,
+                            japKun=char.get("kJapaneseKun",""),
+                            japOn=char.get("kJapaneseOn","")
+                            )
+                        glyph.save()
+                        print("CREATED GLYPH: ", glyph)
 
-                    #uniVersion = UnicodeVersion.objects.get(number=charAge)
-                    #print("charAge: ", charAge)
+                    else:
+                        glyph = Glyph.objects.get(codePoint=int(cp, base=16))
+                        #glyph.category = category
+                        #glyph.combiningClass = int(ccc)
+                        glyph.isEmoji = True if emoji == "Y" else False
+                        #glyph.mandarin = char.get("kMandarin", "")
+                        #glyph.cantonese = char.get("kCantonese", "")
+                        #glyph.decomposition = char.get("dm", "")
+                        #glyph.officialName = charName
+                        glyph.save()
+                        print("UPDATED GLYPH: ", glyph)
 
-                    """glyph = Glyph(
-                        officialName=charName, 
-                        codePoint=cpInt, 
-                        abbreviation=charAbbrev, 
-                        codePlane = cpInt // 65535, 
-                        category=category, 
-                        joiningGroup=jg,
-                        slug=cp,
-                        unicodeBlock=block,
-                        minUnicodeVersion=uniVersion,
-                        definition=definition,
-                        japKun=char.get("kJapaneseKun",""),
-                        japOn=char.get("kJapaneseOn","")
-                        )
-                    """
-
-                    glyph = Glyph.objects.get(codePoint=int(cp, base=16))
-                    #glyph.category = category
-                    #glyph.combiningClass = int(ccc)
-                    glyph.isEmoji = True if emoji == "Y" else False
-                    #glyph.mandarin = char.get("kMandarin", "")
-                    #glyph.cantonese = char.get("kCantonese", "")
-                    #glyph.decomposition = char.get("dm", "")
-                    #glyph.officialName = charName
-                    glyph.save()
-                    
-                    print("UPDATED GLYPH: ", glyph)
         print("Errors with codepoints: ", errorList)
 

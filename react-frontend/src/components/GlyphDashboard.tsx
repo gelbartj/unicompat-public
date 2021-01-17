@@ -1,55 +1,135 @@
 import React, { useEffect, useState, useReducer } from "react";
-import { apiHost } from "./globalSettings";
+import { Helmet } from "react-helmet-async";
+import { apiHost, ErrorCodes, Params } from "./globalSettings";
 import axios from "axios";
 import { TopBlock } from "./TopBlock";
 import { OSData } from "./OSData";
 import { FAQs } from "./FAQs";
-import { InvalidCPBlock } from "./InvalidCPBlock";
+import { BadStatusBlock } from "./BadStatusBlock";
 import {
   UserPercentBlock,
   SourceCitation,
   EmojiNote,
 } from "./UserPercentBlock";
 import { DetailTable } from "./DetailTable";
-import { Layout } from "./Layout";
-import { useParams, withRouter } from "react-router-dom";
+import { FromSearchBanner, Layout, useQuery } from "./Layout";
+import { Link, Redirect, useParams, withRouter } from "react-router-dom";
 import { ServerErrorBlock } from "./ServerErrorBlock";
+import { SequenceDetailTable } from "./SequenceDetailTable";
+import { SequenceTopBlock } from "./SequenceTopBlock";
+import { Variants, SequenceObj, VariantObj } from "./Variants";
+import Loading from "./Loading";
 
-export interface DBData {
-  glyph: any | null;
-  decomp: any | null;
+interface Sequence {
+  id: number;
+  officialName: string;
+  sequenceString: string;
+  cpList: number[];
+  glyphObjs: any[];
+  isEmoji?: boolean;
+  isProvisional?: boolean;
+  supportPercent: number;
+  variants?: SequenceObj[];
+}
+
+interface UnicodeVersion {
+  number: string;
+  releaseDate: string;
+}
+
+interface UnicodeBlock {
+  name: string;
+  slug: string;
+}
+
+export interface Glyph {
+  abbreviation?: string;
+  bitmap?: string;
+  cantonese?: string;
+  category?: string;
+  categoryT?: string;
+  codePlane?: number;
+  codePlaneT?: string;
+  codePoint: number;
+  decomposition?: string;
+  definition?: string;
+  hasBwEmoji?: boolean;
+  isEmoji?: boolean;
+  japKun?: string;
+  japOn?: string;
+  mandarin?: string;
+  minUnicodeVersion?: UnicodeVersion;
+  officialName: string;
+  supportPercent: number;
+  surrogates?: string[];
+  unicodeBlock?: UnicodeBlock;
+  variants?: VariantObj[];
+  isNonCharacter?: boolean;
+}
+
+interface DBBase {
   oses: any | null;
   noto: any | null;
+  searchTerm?: string;
 }
+
+type GlyphData = DBBase & {
+  glyph: Glyph | null;
+  decomp: any | null;
+};
+
+type SequenceData = DBBase & {
+  sequence: Sequence | null;
+};
+
+export type DBData = GlyphData | SequenceData;
 
 interface InitialState {
   isLoading: boolean;
   dbData: DBData | null;
   slug: string;
-  gotSearchResults: boolean;
   isSearch: boolean;
   fontData?: any;
   osFontData?: any;
   featuredOS?: any;
   newRequest: string | null;
   redirect: string;
-  isError: boolean;
+  isServerError: boolean;
   emojiNoteHighlighted: boolean;
+  errorMessage: string;
+  badStatus: typeof ErrorCodes[keyof typeof ErrorCodes] | null;
+  title: string;
+}
+
+export function isGlyphData(
+  dbDataArg: GlyphData | SequenceData | null
+): dbDataArg is GlyphData {
+  if (dbDataArg === null) return false;
+  return (dbDataArg as GlyphData).glyph !== undefined;
+}
+
+function makeSequenceSlug(cpList?: number[]) {
+  if (!cpList) return "";
+  return cpList
+    .map((cp: number) => cp.toString(16).toUpperCase().padStart(4, "0"))
+    .join("-");
 }
 
 const GlyphDashboardNoRouter: React.FC<any> = (props) => {
-  let { codePoint, searchTerm } = useParams();
+  let { codePoint, searchTerm, sequencePoints } = useParams<Params>();
 
   const initialState: InitialState = {
     isLoading: false,
     dbData: null,
-    slug: codePoint || searchTerm || "",
-    gotSearchResults: false,
+    slug: codePoint || searchTerm || sequencePoints || "",
     isSearch: false,
     newRequest: null,
     redirect: "",
-    isError: false,
-    emojiNoteHighlighted: false
+    isServerError: false,
+    emojiNoteHighlighted: false,
+    errorMessage: "",
+    badStatus: null,
+    title: "unicompat ~ Check OS compatibility of every Unicode character"
   };
 
   function dbReducer(state: InitialState, action: any): InitialState {
@@ -59,48 +139,58 @@ const GlyphDashboardNoRouter: React.FC<any> = (props) => {
         return {
           ...state,
           isLoading: true,
+          isServerError: false,
           dbData: null,
           isSearch: !!searchTerm,
+          badStatus: null,
         };
       }
 
-      case "FETCH_DATA_SUCCESS": {
+      case "GLYPH_SUCCESS": {
         return {
           ...state,
           isLoading: false,
+          isServerError: false,
           dbData: action.payload,
           slug:
-            action.payload.glyph.codePoint?.toString(16) ||
-            codePoint ||
+            action.payload?.glyph?.codePoint?.toString(16).toUpperCase() ||
+            codePoint?.toUpperCase() ||
             searchTerm ||
             "",
-          gotSearchResults: !!action.payload.glyph?.codePoint,
-          isError: false
+          badStatus: null,
         };
       }
 
-      case "FETCH_OS_DATA": {
-        return {
-          ...state,
-          isLoading: true,
-          osFontData: null,
-          featuredOS: action.payload,
-        };
-      }
-
-      case "FETCH_OS_DATA_SUCCESS": {
+      case "SEQUENCE_SUCCESS": {
         return {
           ...state,
           isLoading: false,
-          osFontData: action.payload,
-          isError: false
+          isServerError: false,
+          dbData: action.payload,
+          slug: action.payload?.sequence
+            ? makeSequenceSlug(action.payload.sequence?.cpList)
+            : sequencePoints?.toUpperCase() || "",
+          badStatus: null,
         };
       }
 
-      case "RESET_FEATURED_OS": {
+      case "FETCH_SUCCESS_BAD_STATUS": {
+        let newTitle = "";
+        if (action.payload.status === ErrorCodes.invalidCodePoint) {
+          newTitle = "unicompat ~ Invalid code point";
+        } else if (action.payload.status === ErrorCodes.noSearchResults) {
+          newTitle = `unicompat ~ No search results for "${decodeURIComponent(
+            searchTerm || ""
+          )}"`;
+        }
         return {
           ...state,
-          featuredOS: null,
+          isLoading: false,
+          isServerError: false,
+          dbData: null,
+          slug: codePoint || searchTerm || sequencePoints || "",
+          badStatus: action.payload.status,
+          title: newTitle
         };
       }
 
@@ -117,29 +207,37 @@ const GlyphDashboardNoRouter: React.FC<any> = (props) => {
           ...state,
           isLoading: false,
           fontData: action.payload,
-          isError: false
+          isServerError: false,
         };
-      }
-
-      case "SEARCH_SUCCESS": {
-        return {
-          ...state,
-          redirect: action.payload.toString(16),
-          isError: false
-        }
       }
 
       case "FETCH_DATA_ERROR": {
         return {
           ...state,
-          isError: true
-        }
+          isServerError: true,
+          errorMessage: action.payload,
+          title: "unicompat ~ Server Error"
+        };
       }
 
       case "HIGHLIGHT_EMOJI_NOTE": {
         return {
           ...state,
-          emojiNoteHighlighted: true
+          emojiNoteHighlighted: true,
+        };
+      }
+
+      case "UPDATE_TITLE": {
+        return {
+          ...state,
+          title: action.payload
+        }
+      }
+
+      case "REDIRECT": {
+        return {
+          ...state,
+          redirect: action.payload
         }
       }
 
@@ -155,44 +253,87 @@ const GlyphDashboardNoRouter: React.FC<any> = (props) => {
 
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
-    const requestedSlug = codePoint || searchTerm;
+    const requestedSlug = codePoint || searchTerm || sequencePoints;
 
     const getObjects = async () => {
       dispatch({ type: "FETCH_DATA" });
-
       const apiURL =
-        `${apiHost}/api/` +
-        (searchTerm
-          ? `glyphsearch/${requestedSlug}`
-          : `glyph/${requestedSlug}`
-        ).split("#")[0]; // remove react-router hash
-
+        (
+          `${apiHost}/api/` +
+          (searchTerm
+            ? `luckySearch/`
+            : sequencePoints
+            ? `sequence/`
+            : `glyph/`) +
+          requestedSlug
+        ).split("#")[0] + // remove react-router hash
+        "/"; // Django will return 301 redirect without final slash
       await axios
         .get(apiURL, {
           cancelToken: source.token,
         })
         .then((res) => {
           if (mounted) {
-            // console.log("DATA: ", res.data);
-            dispatch({ type: "FETCH_DATA_SUCCESS", payload: res.data });
-            const newTitle =
-              "unicompat" +
-              (res.data.glyph?.codePoint
-                ? ` ~ U+${res.data.glyph.codePoint
-                    .toString(16)
-                    .toUpperCase()}: ` + res.data.glyph?.officialName
-                : ` ~ Search: "${decodeURIComponent(searchTerm)}"`);
-            window.document.title = newTitle;
-            if (res.data.glyph?.codePoint && searchTerm) {
-              // Can't use react-router history here because we want to change URL without causing reload
-              window.history.pushState({}, "unicompat ~ " + res.data.glyph.officialName, "/" + res.data.glyph.codePoint.toString(16));
+            if (res.data.error) {
+              // Custom Django error, none currently programmed
+              dispatch({ type: "FETCH_DATA_ERROR", payload: res.data.error });
+              return;
             }
+
+            if (res.data?.redirect) {
+              dispatch({ type: "REDIRECT", payload: res.data.redirect })
+            }
+
+            if (res.data?.status) {
+              dispatch({ type: "FETCH_SUCCESS_BAD_STATUS", payload: res.data });
+            } else {
+              dispatch({
+                type: res.data?.sequence ? "SEQUENCE_SUCCESS" : "GLYPH_SUCCESS",
+                payload: res.data,
+              });
+            }
+
+            let newTitle = "";
+
+            if (searchTerm) {
+              // Can't use react-router history here because we want to change URL without causing reload
+              if (res.data?.glyph?.codePoint) {
+                newTitle = "unicompat ~ " + res.data.glyph.officialName;
+                window.history.replaceState(
+                  {},
+                  newTitle,
+                  "/" + res.data.glyph.codePoint.toString(16).toUpperCase()
+                );
+              } else if (res.data?.sequence?.officialName) {
+                newTitle = "unicompat ~ " + res.data.sequence.officialName;
+                window.history.replaceState(
+                  {},
+                  newTitle,
+                  "/" + makeSequenceSlug(res.data.sequence?.cpList)
+                );
+              } 
+            } else {
+                if (res.data?.status === undefined) {
+                  newTitle =
+                    "unicompat ~ " +
+                    (res.data?.glyph?.codePoint
+                      ? `U+${res.data.glyph.codePoint
+                          .toString(16)
+                          .toUpperCase()}: ` + res.data.glyph?.officialName
+                      : res.data?.sequence
+                      ? res.data?.sequence?.officialName
+                      : "");
+                }
+              }
+              if (newTitle) {
+                dispatch({ type: "UPDATE_TITLE", payload: newTitle })
+              }
           }
         })
-        .catch((e) => {
-          dispatch({ type: "FETCH_DATA_ERROR", payload: e});
-          window.document.title = "unicompat ~ Server Error";
-          console.log(e);
+        .catch((error) => {
+          // Unmanaged server error
+          if (error?.message !== "FETCH_CANCELED")
+            dispatch({ type: "FETCH_DATA_ERROR" });
         });
     };
 
@@ -202,63 +343,106 @@ const GlyphDashboardNoRouter: React.FC<any> = (props) => {
 
     return () => {
       mounted = false;
-      // source.cancel("useEffect stopped");
+      source.cancel("FETCH_CANCELED");
     };
   }, [
     dataState.newRequest,
     dataState.isSearch,
     codePoint,
     searchTerm,
+    sequencePoints,
     props.history,
   ]);
 
   const [showCharDetails, setShowCharDetails] = useState(false);
+  const hasVariants =
+    ((dataState.dbData as SequenceData)?.sequence?.variants || []).length > 0 ||
+    ((dataState.dbData as GlyphData)?.glyph?.variants || []).length > 0;
+
+  const DashboardBody = () => {
+    return <>{ dataState.redirect && <Redirect to={ dataState.redirect} />}
+      {(isGlyphData(dataState.dbData) || codePoint) ? (
+        <TopBlock
+          dbData={dataState.dbData}
+          slug={dataState.slug}
+          dispatch={dispatch}
+        />
+      ) : (dataState.dbData?.sequence || sequencePoints) ? (
+        <SequenceTopBlock
+          dbData={dataState.dbData}
+          slug={dataState.slug}
+          dispatch={dispatch}
+        />
+      ) : <h3 className="title">Searching<Loading dotsOnly={true} /></h3>}
+      <UserPercentBlock dbData={dataState.dbData} slug={dataState.slug.padStart(4, "0")} />
+      <div style={{ textAlign: "center", marginBottom: "10px" }}>
+        <button
+          className="btn showCharBtn"
+          onClick={() => setShowCharDetails((scd) => !scd)}
+        >
+          {showCharDetails ? "Hide" : "Show"}{" "}
+          {sequencePoints ? "sequence" : "character"} details
+        </button>
+      </div>
+      <div
+        className={
+          "detailTableWrap" + (showCharDetails ? " active" : " hidden")
+        }
+      >
+        {isGlyphData(dataState.dbData) || codePoint ? (
+          <DetailTable dbData={dataState.dbData} />
+        ) : (
+          <SequenceDetailTable dbData={dataState.dbData} />
+        )}
+      </div>
+      {hasVariants && (
+        <div className="variantWrap">
+          <h5>Variants</h5>
+          {isGlyphData(dataState.dbData) ? (
+            <Variants
+              baseCharCp={dataState.dbData?.glyph?.codePoint}
+              variantObjs={dataState.dbData?.glyph?.variants}
+            />
+          ) : (
+            <Variants sequenceObjs={dataState.dbData?.sequence?.variants} />
+          )}
+        </div>
+      )}
+      <OSData dbData={dataState.dbData} />
+    </>
+  }
+
+  let query = useQuery();
 
   return (
     <>
-      <Layout dispatch={dispatch}>
-        { dataState.isError ? <ServerErrorBlock /> :
-        dataState.dbData?.glyph?.codePoint === null ? (
-          <InvalidCPBlock
-            slug={dataState.slug}
-            gotSearchResults={dataState.gotSearchResults}
-            isSearch={dataState.isSearch}
-            dispatch={dispatch}
-          />
+      <Helmet>
+        <title>{ dataState.title }</title>
+        { (dataState.isServerError || dataState.badStatus) && <meta name="robots" content="noindex" />}
+      </Helmet>
+      <Layout dispatch={dispatch} blockLink={true}>
+      <FromSearchBanner query={query.get("search") || dataState?.dbData?.searchTerm} />
+        {dataState.isServerError ? (
+          <ServerErrorBlock errorMessage={dataState.errorMessage} />
+        ) : dataState.badStatus ? (
+          <BadStatusBlock slug={dataState.slug} status={dataState.badStatus} />
         ) : (
           <>
-            <TopBlock
-              dbData={dataState.dbData}
-              slug={dataState.slug}
-              dispatch={dispatch}
-            />
-            <UserPercentBlock dbData={dataState.dbData} />
-            <div style={{ textAlign: "center", marginBottom: "10px" }}>
-              <button
-                className="btn showCharBtn"
-                onClick={() => setShowCharDetails(!showCharDetails)}
-              >
-                {showCharDetails ? "Hide" : "Show"} character details
-              </button>
-            </div>
-            <div
-              className={
-                "detailTableWrap" + (showCharDetails ? " active" : " hidden")
-              }
-            >
-              <DetailTable dbData={dataState.dbData} />
-            </div>
-
-            <OSData dbData={dataState.dbData} />
-
+            <DashboardBody />
             <div className="bottomWrap">
               <FAQs />
               <SourceCitation />
-              {dataState.dbData?.glyph?.isEmoji &&
-                dataState.dbData?.glyph?.hasColorEmoji && <EmojiNote highlighted={dataState.emojiNoteHighlighted} />}
+              {isGlyphData(dataState.dbData) &&
+                dataState.dbData?.glyph?.isEmoji &&
+                dataState.dbData?.glyph?.hasBwEmoji && (
+                  <EmojiNote highlighted={dataState.emojiNoteHighlighted} />
+                )}
             </div>
           </>
         )}
+        <div className="blockLinkFooter">
+          Want to see more than one glyph at a time? Try the <Link to="/block">Unicode block browser</Link>
+        </div>
       </Layout>
     </>
   );

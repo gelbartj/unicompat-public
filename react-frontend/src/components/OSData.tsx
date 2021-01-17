@@ -1,61 +1,62 @@
 import React, { useReducer, useRef, useEffect } from "react";
 import { formatDate } from "./utilities";
-import { DBData } from "./GlyphDashboard";
-import { SeqDBData, getIsSequence } from "./SequenceDashboard";
+import { DBData, isGlyphData } from "./GlyphDashboard";
 import { usageStats } from "./usageStats";
 import { apiHost } from "./globalSettings";
 import axios from "axios";
 import Loading from "./Loading";
 
 interface OSObj {
-  id: number,
-  family: "mac" | "android" | "ios" | "windows" | "linux" | "chromeos",
-  version: string,
-  codeName: string,
-  releaseDate: string,
-  slug: string,
-  maxUnicodeVersion?: any,
-  displayName: string,
-  fontListSource?: string
+  id: number;
+  family: "mac" | "android" | "ios" | "windows" | "linux" | "chromeos";
+  version: string;
+  codeName: string;
+  releaseDate: string;
+  slug: string;
+  maxUnicodeVersion__number?: string | null;
+  displayName: string;
+  fontListSource?: string;
 }
 
 interface OSDataProps {
-  dbData: DBData | SeqDBData | null;
+  dbData: DBData | null;
 }
 
 // const hostName = window.location.hostname;
 
-const scrollToRef = (ref: React.MutableRefObject<HTMLDivElement | null>) => { if (ref.current) window.scrollTo({ 
-  left: 0,
-  top: ref.current.offsetTop,
-  behavior: 'smooth' 
-});
-}
+const scrollToRef = (ref: React.MutableRefObject<HTMLDivElement | null>) => {
+  if (ref.current)
+    window.scrollTo({
+      left: 0,
+      top: ref.current.offsetTop,
+      behavior: "smooth",
+    });
+};
 
 export const OSData: React.FC<OSDataProps> = ({ dbData }) => {
-
   const initialState = {
     osFontData: null as any,
     featuredOS: null as OSObj | null,
     isLoading: false,
-    showAllFonts: false
+    showAllFonts: false,
   };
 
   const [dataState, dispatch] = useReducer(dbReducer, initialState);
 
   const displayOSes = {
     android: [
+      "11.0",
       "10.0",
       "9.0 Pie",
       "8.0 Oreo",
       "7.0 Nougat",
       "6.0 Marshmallow",
       "5.0 Lollipop",
-      "4.4 KitKat",
     ],
-    ios: ["13", "12", "11", "10", "9", "8"],
+    ios: ["14", "13", "12", "11", "10", "9", "8"],
     windows: ["10", "8.1", "8", "7", "Vista", "XP"],
     mac: [
+      "11.0 Big Sur",
       "10.15 Catalina",
       "10.14 Mojave",
       "10.13 High Sierra",
@@ -84,7 +85,7 @@ export const OSData: React.FC<OSDataProps> = ({ dbData }) => {
           ...state,
           isLoading: false,
           osFontData: action.payload,
-          showAllFonts: false
+          showAllFonts: false,
         };
       }
 
@@ -108,7 +109,10 @@ export const OSData: React.FC<OSDataProps> = ({ dbData }) => {
   }
 
   const getOSDetail = async (osObj: any) => {
-    if ((getIsSequence(dbData) ? !dbData?.sequence : !dbData?.glyph?.codePoint) || dbData === null) {
+    if (
+      (isGlyphData(dbData) ? !dbData?.glyph?.codePoint : !dbData?.sequence) ||
+      dbData === null
+    ) {
       return;
     }
 
@@ -124,13 +128,12 @@ export const OSData: React.FC<OSDataProps> = ({ dbData }) => {
 
     let mounted = true;
 
-    const apiURL = getIsSequence(dbData) ? `${apiHost}/api/sequencepk/${dbData.sequence!.id}/fontsbyos/${osId}` 
-      : `${apiHost}/api/glyphcp/${dbData.glyph.codePoint}/fontsbyos/${osId}`;
+    const apiURL = isGlyphData(dbData)
+      ? `${apiHost}/api/glyphcp/${dbData!.glyph?.codePoint}/fontsbyos/${osId}`
+      : `${apiHost}/api/sequencepk/${dbData.sequence!.id}/fontsbyos/${osId}`;
 
     await axios
-      .get(
-        apiURL
-      )
+      .get(apiURL)
       .then((res) => {
         if (mounted) {
           dispatch({ type: "FETCH_OS_DATA_SUCCESS", payload: res.data });
@@ -154,19 +157,25 @@ export const OSData: React.FC<OSDataProps> = ({ dbData }) => {
     if (dataState.featuredOS) {
       const family = usageStats[dataState.featuredOS.family];
       if (family) {
-        return (family[dataState.featuredOS.version] * family["t"] * 100).toFixed(2);
+        return (
+          family[dataState.featuredOS.version] *
+          family["t"] *
+          100
+        ).toFixed(2);
       }
-    } 
-  }
+    }
+  };
 
   useEffect(() => {
-    dispatch({type: "RESET_FEATURED_OS"});
+    dispatch({ type: "RESET_FEATURED_OS" });
   }, [dbData]);
 
   return (
     <>
       <div ref={featuredRef} />
-      {(getIsSequence(dbData) ? dbData?.sequence?.supportPercent : dbData?.glyph?.supportPercent) > 0 && (
+      {(isGlyphData(dbData)
+        ? dbData?.glyph?.supportPercent || 0
+        : dbData?.sequence?.supportPercent || 0) > 0 && (
         <div
           className="whichOS"
           style={{
@@ -180,72 +189,127 @@ export const OSData: React.FC<OSDataProps> = ({ dbData }) => {
         </div>
       )}
       <div
-        className={"featuredOSwrap" + (dataState.featuredOS ? " active" : " hidden")}
+        className={
+          "featuredOSwrap" + (dataState.featuredOS ? " active" : " hidden")
+        }
         style={{
           opacity: dataState.featuredOS ? 1 : 0,
         }}
       >
-        <div
-          className="featuredOS"          
-        >
-          <div
-            className="featuredOSname"
-          >
+        <div className="featuredOS">
+          <div className="featuredOSname">
             {dataState.featuredOS?.displayName || "..."}
           </div>
           <div className="featuredOSfontsWrap">
-            <div
-              className="osReleaseBlock"
-            >
-              
-                {(dataState.featuredOS) && <div className="OSusedBy">{`Used by ${getOSUsage()}% of web traffic*`}</div>}
+            <div className="osReleaseBlock">
+              {dataState.featuredOS && (
+                <div className="OSusedBy">{`Used by ${getOSUsage()}% of web traffic*`}</div>
+              )}
             </div>
-              <div
-                className="fontList"
-              >{ dataState.osFontData ? <>
-                Comes with {dataState.osFontData.fontCount} font
-                {dataState.osFontData.fonts.length === 1 ? " " : "s "}
-                that support
-                {dataState.osFontData.fonts.length === 1 ? "s " : " "}
-                this character
-                {dataState.osFontData.fonts.length > 5 ? ", including: " : ": "}
-                {dataState.osFontData.fonts
-                  .slice(0, 5)
-                  .map((font: any, idx: number) => (
-                    <strong key={idx}>{font.name}</strong>
-                  ))
-                  .reduce((prev: any, curr: any, idx: number) => [
-                    prev,
-                    idx === dataState.osFontData.fonts.length - 1 ? `${ idx > 1 ? "," : ""} and ` : ", ",
-                    curr
-                  ])}
-                {dataState.osFontData.fontCount > 5 &&
-                  ` and ${dataState.osFontData.fontCount - 5} other${
-                    dataState.osFontData.fontCount - 5 > 1 ? "s" : ""
-                  }.`}
-
-                  { (dataState.osFontData.fontCount > 5) && <button className="showMoreBtn" onClick={() => dispatch({type: "TOGGLE_SHOW_ALL_FONTS", payload: dataState.showAllFonts })}>{ dataState.showAllFonts ? "(Show less)" : "(Show all)" }</button>}
-
-                  { dataState.showAllFonts && <><ul style={{ textAlign: "left" }}>
-                    { dataState.osFontData.fonts.map((font: any) => (
-                      <li>{ font.name }</li>
-                    ))}
-                  </ul><button className="showMoreBtn" onClick={() => dispatch({type: "TOGGLE_SHOW_ALL_FONTS" })}>{ dataState.showAllFonts ? "(Show less)" : "(Show all)" }</button></>
-                  }
-                  
-                  <div style={{textAlign:"center", marginTop: "15px", fontSize:"0.9em"}}>
-                  <span className="osReleaseDate">OS released {formatDate(dataState.featuredOS?.releaseDate || "...")}
-                  {dataState.featuredOS?.maxUnicodeVersion?.number &&
-                    `, designed for Unicode ${
-                      dataState.featuredOS?.maxUnicodeVersion?.number || "..."
-                    }`}
-                    </span> •{" "}
-                    <a href={ dataState.featuredOS?.fontListSource?.split(" and ")[0] }>OS font list</a>
-                    { dataState.featuredOS?.fontListSource && dataState.featuredOS.fontListSource.split(" and ").length > 1 && <>, <a href={ dataState.featuredOS?.fontListSource?.split(" and ")[1]}>(2)</a></> }
+            <div className="fontList">
+              {dataState.osFontData ? (
+                <>
+                  Comes with {dataState.osFontData.fontCount} font
+                  {dataState.osFontData.fonts.length === 1 ? " " : "s "}
+                  that support
+                  {dataState.osFontData.fonts.length === 1 ? "s " : " "}
+                  this character
+                  {dataState.osFontData.fonts.length > 5
+                    ? ", including: "
+                    : ": "}
+                  {dataState.osFontData.fonts
+                    .slice(0, 5)
+                    .map((font: any, idx: number) => (
+                      <strong key={idx}>{font.name}</strong>
+                    ))
+                    .reduce((prev: any, curr: any, idx: number) => [
+                      prev,
+                      idx === dataState.osFontData.fonts.length - 1
+                        ? `${idx > 1 ? "," : ""} and `
+                        : ", ",
+                      curr,
+                    ])}
+                  {dataState.osFontData.fontCount > 5 &&
+                    ` and ${dataState.osFontData.fontCount - 5} other${
+                      dataState.osFontData.fontCount - 5 > 1 ? "s" : ""
+                    }.`}
+                  {dataState.osFontData.fontCount > 5 && (
+                    <button
+                      className="showMoreBtn"
+                      onClick={() =>
+                        dispatch({
+                          type: "TOGGLE_SHOW_ALL_FONTS",
+                          payload: dataState.showAllFonts,
+                        })
+                      }
+                    >
+                      {dataState.showAllFonts ? "(Show less)" : "(Show all)"}
+                    </button>
+                  )}
+                  {dataState.showAllFonts && (
+                    <>
+                      <ul style={{ textAlign: "left" }}>
+                        {dataState.osFontData.fonts.map((font: any) => (
+                          <li>{font.name}</li>
+                        ))}
+                      </ul>
+                      <button
+                        className="showMoreBtn"
+                        onClick={() =>
+                          dispatch({ type: "TOGGLE_SHOW_ALL_FONTS" })
+                        }
+                      >
+                        {dataState.showAllFonts ? "(Show less)" : "(Show all)"}
+                      </button>
+                    </>
+                  )}
+                  <div
+                    style={{
+                      textAlign: "center",
+                      marginTop: "15px",
+                      fontSize: "0.9em",
+                    }}
+                  >
+                    <span className="osReleaseDate">
+                      OS released{" "}
+                      {formatDate(dataState.featuredOS?.releaseDate || "...")}
+                      {dataState.featuredOS?.maxUnicodeVersion__number &&
+                        `, designed for Unicode ${
+                          dataState.featuredOS?.maxUnicodeVersion__number ||
+                          "..."
+                        }`}
+                    </span>{" "}
+                    •{" "}
+                    <a
+                      href={
+                        dataState.featuredOS?.fontListSource?.split(" and ")[0]
+                      }
+                    >
+                      OS font list
+                    </a>
+                    {dataState.featuredOS?.fontListSource &&
+                      dataState.featuredOS.fontListSource.split(" and ")
+                        .length > 1 && (
+                        <>
+                          ,{" "}
+                          <a
+                            href={
+                              dataState.featuredOS?.fontListSource?.split(
+                                " and "
+                              )[1]
+                            }
+                          >
+                            (2)
+                          </a>
+                        </>
+                      )}
                   </div>
-                  </> : <Loading dotsOnly={true} />}
+                </>
+              ) : (
+                <Loading dotsOnly={true} />
+              )}
             </div>
-            </div>
+          </div>
         </div>
       </div>
 

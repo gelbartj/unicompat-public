@@ -1,3 +1,9 @@
+"""
+The functions in this file were used in the original creation of Unicompat
+in May/June 2020. They were largely superseded by the functions in 
+importEmojiVersion.py in the December 2020 update.
+"""
+
 def addVariants(line):
     dataList = [a.strip() for a in line.split("#")[0].split(";")]
     #print("Data list: ", dataList)
@@ -28,6 +34,7 @@ def addVariants(line):
     glyphObj.save()
 
 with open('../database-builder/emoji-sequences.txt') as f:
+    # VS Code still seems to have trouble with the Python 3.8 walrus operator
     while line := f.readline():
         if line[0] == "#" or line == "\n":
             continue

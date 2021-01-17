@@ -1,66 +1,67 @@
-import React, { useState } from "react";
+import React from "react";
 import { leftPad } from "./utilities";
 import Loading from "./Loading";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { Params } from "./globalSettings";
 
 interface TopBlockProps {
-  slug: string,
-  dbData?: any,
-  dispatch: React.Dispatch<any>
+  slug: string;
+  dbData?: any;
+  dispatch: React.Dispatch<any>;
 }
 
-export const TopBlock: React.FC<TopBlockProps> = ({ dbData, slug, dispatch }) => {
+export const TopBlock: React.FC<TopBlockProps> = ({
+  dbData,
+  slug,
+  dispatch,
+}) => {
   // const imageHostName = "localhost:8000";
 
-  let { codePoint, searchTerm } = useParams();
+  let { codePoint } = useParams<Params>();
 
-  const [backwardLink, setBackwardLink] = useState("");
-  const [forwardLink, setForwardLink] = useState("");
-
-  const displayChar = dbData
+  const displayChar = dbData?.glyph?.codePoint
     ? String.fromCodePoint(dbData?.glyph?.codePoint)
     : "...";
   return (
     <div className="content">
       <h3 className="title">
-        { (!codePoint && !dbData?.glyph?.codePoint)
-          ? "" : `U+${leftPad(dbData?.glyph?.codePoint.toString(16) || codePoint).toUpperCase()}: `}
+        {!codePoint && !dbData?.glyph?.codePoint
+          ? ""
+          : `U+${leftPad(
+              dbData?.glyph?.codePoint?.toString(16) || codePoint
+            ).toUpperCase()}: `}
         {dbData?.glyph?.officialName || <Loading />}
       </h3>
 
-      <div style={{ float: "right" }}>
-        <button
-          className="btn btn-light"
-          onClick={() => {
-            /*
-            if (dbData.glyph)
-              dispatch({ type: "NEW_REQUEST", payload:(dbData.glyph.codePoint + 1).toString(16)});
-          } */
-          setForwardLink("/" + (dbData.glyph.codePoint + 1).toString(16).toUpperCase());
-        }}
-        >
-          &gt;
-        </button>
-        { forwardLink && <Redirect push to={forwardLink} />}
-      </div>
+      {dbData?.glyph?.codePoint && (
+        <>
+          <div style={{ float: "right" }}>
+            <Link
+              to={"/" + (dbData.glyph.codePoint + 1).toString(16).toUpperCase()}
+              className="btn btn-light"
+            >
+              &gt;
+            </Link>
+          </div>
 
-      <div style={{ float: "left" }}>
-        <button
-          className="btn btn-light"
-          onClick={() => {
-            /*
-            if (dbData.glyph)
-              dispatch({ type: "NEW_REQUEST", payload:(dbData.glyph.codePoint - 1).toString(16)});
-              */
-             setBackwardLink("/" + (dbData.glyph.codePoint - 1).toString(16).toUpperCase());
-          }}
-        >
-          &lt;
-        </button>
-        { backwardLink && <Redirect push to={ backwardLink } /> }
-      </div>
+          <div style={{ float: "left" }}>
+            <Link
+              to={"/" + (dbData.glyph.codePoint - 1).toString(16).toUpperCase()}
+              className="btn btn-light"
+            >
+              &lt;
+            </Link>
+          </div>
+        </>
+      )}
       <div>
-        {["Control character", "Format character"].includes(dbData?.glyph?.categoryT) ? <div style={{backgroundColor:"#eee", fontStyle:"italic",padding:"10px", display:"inline-block", margin:"auto"}}>This is an invisible control or format character</div> : (
+        {(["Control character"].includes( // Formerly included "Format character" here
+          dbData?.glyph?.categoryT
+        ) || dbData?.glyph?.isNonCharacter) ? (
+          <div className="controlChar">
+            This is an invisible control character
+          </div>
+        ) : (
           <div
             style={{
               textAlign: "center",
@@ -83,7 +84,7 @@ export const TopBlock: React.FC<TopBlockProps> = ({ dbData, slug, dispatch }) =>
             <div className={"highlightBox" + (dbData ? " loaded" : "")}>
               <div style={{ lineHeight: "1em" }}>
                 {dbData ? (
-                  dbData.glyph?.isEmoji && dbData.glyph?.hasColorEmoji ? (
+                  dbData.glyph?.isEmoji && dbData.glyph?.hasBwEmoji ? (
                     <table className="twoEmojiTable">
                       <tbody>
                         <tr>
@@ -102,7 +103,7 @@ export const TopBlock: React.FC<TopBlockProps> = ({ dbData, slug, dispatch }) =>
                             className="charSource color"
                             style={{ borderRight: "1px solid lightgrey" }}
                           >
-                            B&W
+                            B&amp;W
                           </td>
                           <td className="charSource color">Color</td>
                         </tr>
@@ -117,10 +118,16 @@ export const TopBlock: React.FC<TopBlockProps> = ({ dbData, slug, dispatch }) =>
               </div>
               <div className="charSource">
                 {dbData ? (
-                  dbData.glyph?.isEmoji && dbData.glyph?.hasColorEmoji ? (
+                  dbData.glyph?.isEmoji && dbData.glyph?.hasBwEmoji ? (
                     <>
                       Your browser
-                      <a id="emojinotelink" href="#emojinote" onClick={() => dispatch({type: "HIGHLIGHT_EMOJI_NOTE"})}>
+                      <a
+                        id="emojinotelink"
+                        href="#emojinote"
+                        onClick={() =>
+                          dispatch({ type: "HIGHLIGHT_EMOJI_NOTE" })
+                        }
+                      >
                         **
                       </a>
                     </>

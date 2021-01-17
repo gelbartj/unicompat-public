@@ -59,7 +59,7 @@ export const FAQs: React.FC = (props) => {
                       languages.
                     </p>
                     <p style={{ fontWeight: "bold" }}>
-                      4. Why doesn't the level of support ever go above ~97%?
+                      4. Why doesn't the level of support ever go above ~95%?
                     </p>
                     <p style={{ marginLeft: "10px" }}>
                       The calculation for user support is based on OS usage
@@ -71,7 +71,7 @@ export const FAQs: React.FC = (props) => {
                         StatCounter
                       </a>
                       . The percentage of worldwide users NOT using Android,
-                      iOS, Windows, or macOS is 2.54% as of May 2020, and we
+                      iOS, Windows, or macOS is 3.8% as of November 2020, and we
                       have not gathered font data for those operating systems.
                       That is why our estimates do not reach 100% but say <em>at least</em> X%,
                       because there is a good chance these other operating

@@ -166,3 +166,7 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 ADMINS = [('Admin', os.getenv("DJANGO_ADMIN_EMAIL"))]
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 150
+}
