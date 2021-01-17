@@ -3,9 +3,7 @@ from django.utils.safestring import mark_safe
 
 from .models import Sequence, Variant, UnicodeVersion, Software, UnicodeBlock, OS, Font, Browser, Glyph
 
-modelList = [Sequence, Variant, UnicodeVersion,
-             Software, UnicodeBlock, OS, Font, Browser, Glyph]
-
+modelList = [Variant, UnicodeVersion, Software, Browser ]
 
 class GlyphAdmin(admin.ModelAdmin):
     exclude = ['variants']
@@ -77,15 +75,10 @@ class UnicodeBlockAdmin(admin.ModelAdmin):
 
 
 for model in modelList:
-    if model == Glyph:
-        admin.site.register(model, GlyphAdmin)
-    elif model == Font:
-        admin.site.register(model, FontAdmin)
-    elif model == OS:
-        admin.site.register(model, OSAdmin)
-    elif model == UnicodeBlock:
-        admin.site.register(model, UnicodeBlockAdmin)
-    elif model == Sequence:
-        admin.site.register(model, SequenceAdmin)
-    else:
-        admin.site.register(model)
+    admin.site.register(model)
+
+admin.site.register(Glyph, GlyphAdmin)
+admin.site.register(Font, FontAdmin)
+admin.site.register(OS, OSAdmin)
+admin.site.register(UnicodeBlock, UnicodeBlockAdmin)
+admin.site.register(Sequence, SequenceAdmin)
